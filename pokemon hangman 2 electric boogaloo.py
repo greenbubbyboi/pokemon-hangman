@@ -1,7 +1,7 @@
 import random
 import csv
 
-def readData():
+def getData():
     array = []
     acceptedExt = ['csv', 'txt']
 
@@ -45,7 +45,7 @@ def game(array):
 
 
 
-pokemon = readData()
+pokemon = getData()
 running = True
 while running:
     game(pokemon)
@@ -55,3 +55,4 @@ while running:
         again = input('Would you like to play again? (y/n) ')
     if again == 'n':
         running = False
+
