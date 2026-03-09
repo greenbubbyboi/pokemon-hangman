@@ -1,15 +1,35 @@
 import random
 import csv
+import os
 
 
 def get_file():
-    return input("Enter file name: ")
+    
+    listOfFileExtensions = ['csv', 'txt']
+    #gets file
+    file = input("Enter file name: ")
+
+    #checks if file is a csv or txt
+    while file.split('.')[1] not in listOfFileExtensions:
+        print('Error - file must have one of the following file extensions:')
+
+        for i in listOfFileExtensions:
+            print('.' + i)
+
+        file = input("Enter file name: ")
+
+    #checks if file path exists
+    while not os.path.isfile(file):
+        print('Error - file path does not exist')
+        file = input("Enter file name: ")
+
+    return file
 
 csv_file = get_file()
 
 def variables(csv_file):
     pokemon = []
-
+    
     with open(csv_file, 'rt') as file:
         reader = csv.reader(file)
         for row in reader:
