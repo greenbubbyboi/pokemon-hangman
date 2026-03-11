@@ -2,12 +2,32 @@ import random
 import csv
 import os
 
+def checkExt(string): #function to validate if the string has an extension (something after the '.')
+    withExtension = True
+    try:
+        string.split('.')[1] = string.split('.')[1]
+    except:
+        withExtension = False
+    while not withExtension:
+        print('Error - file has no extension')
+        string = input("Enter file path: ")
+        try:
+            string.split('.')[1] = string.split('.')[1]
+        except:
+            pass
+        else:
+            withExtension = True
+    return string
 
 def get_file():
-    
+   
     listOfFileExtensions = ['csv', 'txt']
     #gets file
     file = input("Enter file name: ")
+    
+    file = checkExt(file)
+    
+        
 
     #checks if file is a csv or txt and checks if file path exists
     while file.split('.')[1] not in listOfFileExtensions or not os.path.isfile(file):
@@ -18,9 +38,12 @@ def get_file():
                 print('.' + i)
 
             file = input("Enter file name: ")
+            
+            file = checkExt(file)
         else:
             print('Error - file path does not exist')
             file = input("Enter file name: ")
+            file = checkExt(file)
 
     return file
 
@@ -28,7 +51,7 @@ csv_file = get_file()
 
 def variables(csv_file):
     pokemon = []
-    
+   
     with open(csv_file, 'rt') as file:
         reader = csv.reader(file)
         for row in reader:
