@@ -1,111 +1,90 @@
 import random
 import csv
-import os
-
-def checkExt(string): #function to validate if the string has an extension (something after the '.')
-    withExtension = True
-    try:
-        string.split('.')[1] = string.split('.')[1]
-    except:
-        withExtension = False
-    while not withExtension:
-        print('Error - file has no extension')
-        string = input("Enter file path: ")
-        try:
-            string.split('.')[1] = string.split('.')[1]
-        except:
-            pass
-        else:
-            withExtension = True
-    return string
-
-def get_file():
-   
-    listOfFileExtensions = ['csv', 'txt']
-    #gets file
-    file = input("Enter file name: ")
-    
-    file = checkExt(file)
-    
-        
-
-    #checks if file is a csv or txt and checks if file path exists
-    while file.split('.')[1] not in listOfFileExtensions or not os.path.isfile(file):
-        if file.split('.')[1] not in listOfFileExtensions:
-            print('Error - file must have one of the following file extensions:')
-
-            for i in listOfFileExtensions:
-                print('.' + i)
-
-            file = input("Enter file name: ")
-            
-            file = checkExt(file)
-        else:
-            print('Error - file path does not exist')
-            file = input("Enter file name: ")
-            file = checkExt(file)
-
-    return file
-
-csv_file = get_file()
-
-def variables(csv_file):
-    pokemon = []
-   
-    with open(csv_file, 'rt') as file:
-        reader = csv.reader(file)
-        for row in reader:
-            pokemon.append(row[0].lower())
-
-    num = 0
-    lose = 0
-    Word = ""
-
-    return pokemon, num, lose, Word
 
 
-def word(pokemon):
-    length = len(pokemon)
-    ran = random.randint(0, length-1)
-    Word = pokemon[ran]
-    hangman = list(Word)
+def replay():
+    again = True
+    while again == True:
+        resume = (input("Would you like to continue (y/n): "))
+        if resume == "y":
+            again = True
 
-    return Word, hangman
 
-def setup(Word):
-    length_pokemon = len(Word)
-    letter_positions = ["_"] * length_pokemon
-    print(letter_positions)
+            def get_file():
+                return input("Enter file name: ")
 
-    return letter_positions
+            csv_file = get_file()
 
-def guess(word_chosen, letter_positions, num, hangman, lose):
-    while num != len(word_chosen):
-        guess_letter = str(input("Guess a letter: "))
-        if guess_letter in hangman:
-            for i in range(len(word_chosen)):
-                for i in range(len(word_chosen)):
-                    if hangman[i] == guess_letter and letter_positions[i] == "_":
-                        letter_positions[i] = guess_letter
-                        num += 1
-            print(letter_positions)
-            if num == len(word_chosen):
-                print("You guessed the word!")
+            def variables(csv_file):
+                pokemon = []
+
+                with open(csv_file, 'rt') as file:
+                    reader = csv.reader(file)
+                    for row in reader:
+                        pokemon.append(row[0].lower())
+
+                num = 0
+                lose = 0
+                Word = ""
+
+                return pokemon, num, lose, Word
+
+
+            def word(pokemon):
+                length = len(pokemon)
+                ran = random.randint(0, length-1)
+                Word = pokemon[ran]
+                hangman = list(Word)
+
+                return Word, hangman
+
+            def setup(Word):
+                length_pokemon = len(Word)
+                letter_positions = ["_"] * length_pokemon
+                print(letter_positions)
+
+                return letter_positions
+
+            def guess(word_chosen, letter_positions, num, hangman, lose):
+                guessed_letters = []
+
+                while num != len(word_chosen):
+                    guess_letter = input("Guess a letter: ").lower()
+
+                    if guess_letter in guessed_letters:
+                        print("You already guessed that letter:", guessed_letters)
+                        continue
+                    else:
+                        guessed_letters.append(guess_letter)
+                        print("Letters guessed so far:", guessed_letters)
+
+                    if guess_letter in hangman:
+                        for i in range(len(word_chosen)):
+                            if hangman[i] == guess_letter and letter_positions[i] == "_":
+                                letter_positions[i] = guess_letter
+                                num += 1
+                        print(letter_positions)
+                        if num == len(word_chosen):
+                            print("You guessed the word!")
+                            break
+                    else:
+                        lose += 1
+                        print("Sorry that's wrong.")
+                        print(letter_positions)
+                        print("You have", 10 - lose, "guesses left")
+                        if lose == 10:
+                            print("You lose!")
+                            print("The word was:", word_chosen)
+                            break
+
+
+            pokemon, num, lose, Word = variables(csv_file)
+            word_chosen, hangman = word(pokemon)
+            letter_positions = setup(word_chosen)
+            guess(word_chosen, letter_positions, num, hangman, lose)
 
         else:
-            print("Sorry that's wrong.")
-            lose = lose + 1
-            print("you have", 10-lose ,"guesses left")
-            if lose == 10:
-                print("You lose!")
-                print("the word was", word_chosen)
-                break
+            print("Thank you for playing!")
+            again = False
 
-
-
-
-
-pokemon, num, lose, Word = variables(csv_file)
-word_chosen, hangman = word(pokemon)
-letter_positions = setup(word_chosen)
-guess(word_chosen, letter_positions, num, hangman, lose)
+replay()
