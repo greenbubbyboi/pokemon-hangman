@@ -47,7 +47,8 @@ def get_file():
 
     return file
 
-def variables(csv_file):
+def variables():
+csv_file = get_file()
     pokemon = []
 
     with open(csv_file, 'rt') as file:
@@ -110,7 +111,7 @@ def guess(word_chosen, letter_positions, num, hangman, lose):
                 break
 
 
-pokemon, num, lose, Word = variables(csv_file)
+pokemon, num, lose, Word = variables()
 again = True
 while again == True:
     word_chosen, hangman = word(pokemon)
