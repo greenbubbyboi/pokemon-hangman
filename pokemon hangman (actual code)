@@ -2,6 +2,141 @@ import random
 import csv
 import os
 
+HANGMAN_STAGES = [
+    # 0 - empty gallows
+    """
+  +---+
+  |   |
+      |
+      |
+      |
+      |
+      |
+      |
+      |
+=========""",
+    # 1 - head
+    """
+  +---+
+  |   |
+  O   |
+      |
+      |
+      |
+      |
+      |
+      |
+=========""",
+    # 2 - upper body
+    """
+  +---+
+  |   |
+  O   |
+  |   |
+      |
+      |
+      |
+      |
+      |
+=========""",
+    # 3 - lower body (2-pipe body)
+    """
+  +---+
+  |   |
+  O   |
+  |   |
+  |   |
+      |
+      |
+      |
+      |
+=========""",
+    # 4 - left arm
+    """
+  +---+
+  |   |
+  O   |
+  |   |
+ \|   |
+      |
+      |
+      |
+      |
+=========""",
+    # 5 - right arm
+    """
+  +---+
+  |   |
+  O   |
+  |   |
+ \|/  |
+      |
+      |
+      |
+      |
+=========""",
+    # 6 - left arm extended
+    """
+  +---+
+  |   |
+  O   |
+  |   |
+ \|/  |
+\     |
+      |
+      |
+      |
+=========""",
+    # 7 - right arm extended
+    """
+  +---+
+  |   |
+  O   |
+  |   |
+ \|/  |
+\   / |
+      |
+      |
+      |
+=========""",
+    # 8 - left leg
+    """
+  +---+
+  |   |
+  O   |
+  |   |
+ \|/  |
+\   / |
+ /    |
+      |
+      |
+=========""",
+    # 9 - right leg
+    """
+  +---+
+  |   |
+  O   |
+  |   |
+ \|/  |
+\   / |
+ / \  |
+      |
+      |
+=========""",
+    # 10 - leg extension (double-length legs, game over)
+    """
+  +---+
+  |   |
+  O   |
+  |   |
+ \|/  |
+\   / |
+ / \  |
+/   \ |
+      |
+=========""",
+]
+
 def checkExt(string): #function to validate if the string has an extension (something after the '.')
     withExtension = True
     try:
@@ -80,6 +215,7 @@ def setup(Word):
     return letter_positions
 
 def guess(word_chosen, letter_positions, num, hangman, lose):
+    print(HANGMAN_STAGES[lose])
     while num != len(word_chosen):
         guess_letter = str(input("Guess a letter: "))
         if guess_letter in hangman:
@@ -93,12 +229,12 @@ def guess(word_chosen, letter_positions, num, hangman, lose):
                 print("You guessed the word!")
 
         else:
-            print("Sorry that's wrong.")
             lose = lose + 1
-            print("you have", 10-lose ,"guesses left")
+            print(HANGMAN_STAGES[lose])
+            print("Sorry that's wrong! You have", 10 - lose, "guesses left.")
             if lose == 10:
                 print("You lose!")
-                print("the word was", word_chosen)
+                print("The word was:", word_chosen)
                 break
 
 
